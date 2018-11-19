@@ -12,12 +12,12 @@ language: node_js
 node_js:
 - 8
 cache:
-    yarn: true
-    directories:
-    - node_modules
-    - app/node_modules
-    - "$HOME/.electron"
-    - "$HOME/.cache"
+  yarn: true
+  directories:
+  - node_modules
+  - app/node_modules
+  - "$HOME/.electron"
+  - "$HOME/.cache"
 
 addons:
   # chrome: stable
@@ -33,7 +33,7 @@ addons:
     - desktop-file-utils
 
 
-#   
+# before_install:
 # - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then npm --add-python-to-path='true' --debug install --global windows-build-tools;
 #   fi
 
@@ -59,18 +59,18 @@ script:
 - export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
 - sleep 15
 
-# - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then takeown /f "C:\Users\travis\build\joshuef\safe_browser\" /r;
+# - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then takeown /f "C:\Users\travis\build\shriram2301\safe_browser\" /r;
 #   fi
 
 - yarn run package-only
 # travis retry the full string to ensure repeat tests dont crash due to first try processess hanging around...
-# - if [[ "$NODE_ENV" != "prod" ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse ||  yarn run test-exts-e2e-network";
-#   fi
-# - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-e2e-prod";
-#   fi
-# - sleep 5
-# - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-exts-e2e-prod";
-#   fi
+- if [[ "$NODE_ENV" -ne "prod" ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse ||  yarn run test-exts-e2e-network";
+  fi
+- if [[ "$TRAVIS_OS_NAME" -ne "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-e2e-prod";
+  fi
+- sleep 5
+- if [[ "$TRAVIS_OS_NAME" -ne "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-exts-e2e-prod";
+  fi
 
 after_success:
 - ls release
