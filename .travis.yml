@@ -70,7 +70,9 @@ script:
   fi
 - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-e2e-prod";
   fi
-- if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser";
+- if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then powershell  Get-Process;
+  fi  
+- if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then travis_retry eval " powershell Stop-Process -Name "electron" -Force || powershell Stop-Process -Name "SAFE Browser" -Force";
   fi  
 - sleep 5
 - echo "----------------------SCRIPT DONE--------------------"  
