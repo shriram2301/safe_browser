@@ -46,6 +46,7 @@ before_script:
 
 script:
 # update the xdg implementation on the machine. older version is buggy
+- exit
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cp node_modules/opn/xdg-open ~/bin/;
   fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xdg-open --version;
@@ -70,12 +71,13 @@ script:
   fi
 - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-e2e-prod";
   fi
-- if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then powershell  Get-Process;
+- if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then travis_retry eval  "Get-Process";
   fi  
 # - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then travis_retry eval " powershell Stop-Process -Name "electron" -Force || powershell Stop-Process -Name "SAFE Browser" -Force";
 #   fi  
 - sleep 5
-- echo "----------------------SCRIPT DONE--------------------"  
+- echo "----------------------SCRIPT DONE--------------------"
+- exit
 after_script:
 - echo "----------------------After Script--------------------" 
 after_success:
