@@ -71,7 +71,7 @@ script:
 - sleep 5
 - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-exts-e2e-prod";
   fi
-  - echo "----------------------SCRIPT DONE--------------------"  
+- echo "----------------------SCRIPT DONE--------------------"  
 
 after_success:
 - echo "----------------------After Success--------------------" 
