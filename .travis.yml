@@ -72,11 +72,12 @@ script:
   fi
 - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then powershell  Get-Process;
   fi  
-- if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then travis_retry eval " powershell Stop-Process -Name "electron" -Force || powershell Stop-Process -Name "SAFE Browser" -Force";
-  fi  
+# - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then travis_retry eval " powershell Stop-Process -Name "electron" -Force || powershell Stop-Process -Name "SAFE Browser" -Force";
+#   fi  
 - sleep 5
 - echo "----------------------SCRIPT DONE--------------------"  
-
+after_script:
+- echo "----------------------After Script--------------------" 
 after_success:
 - echo "----------------------After Success--------------------" 
 - ls release
