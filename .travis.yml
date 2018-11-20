@@ -39,7 +39,7 @@ addons:
 
 before_script:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080;
-  fi
+  fi 
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start &
 - sleep 5
