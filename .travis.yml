@@ -64,8 +64,8 @@ script:
 
 - yarn run package-only
 # travis retry the full string to ensure repeat tests dont crash due to first try processess hanging around...
-# - if [[ "$NODE_ENV" != "prod" ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse ||  yarn run test-exts-e2e-network";
-#   fi
+- if [[ "$NODE_ENV" != "prod" &&  "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse ||  yarn run test-exts-e2e-network";
+  fi
 - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-e2e-prod";
   fi
 - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-e2e-prod";
@@ -75,8 +75,6 @@ script:
 - sleep 5
 - echo "----------------------SCRIPT DONE--------------------"
 
-after_script:
-- echo "----------------------After Script--------------------" 
 after_success:
 - echo "----------------------After Success--------------------" 
 - ls release
