@@ -33,7 +33,7 @@ addons:
     - desktop-file-utils
 
 
-# before_install:
+# before_install: 
 # - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then npm --add-python-to-path='true' --debug install --global windows-build-tools;
 #   fi
 
