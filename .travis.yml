@@ -74,7 +74,7 @@ script:
 #   fi  
 - sleep 5
 - echo "----------------------SCRIPT DONE--------------------"
-- exit
+
 after_script:
 - echo "----------------------After Script--------------------" 
 after_success:
