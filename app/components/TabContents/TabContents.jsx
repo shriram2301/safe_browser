@@ -12,6 +12,11 @@ import logger from 'logger';
 
 export default class TabContents extends Component
 {
+    constructor( props )
+    {
+        super( props );
+        this.allTabComponents = [];
+    }
     getActiveTab()
     {
         return this.activeTab;
@@ -19,8 +24,19 @@ export default class TabContents extends Component
 
     render()
     {
-        const { addTab, closeTab, bookmarks, allTabs, tabs, updateActiveTab,
-                updateTab, isActiveTabReloading, pageLoaded, windowId } = this.props;
+        const {
+            addTab,
+            closeTab,
+            bookmarks,
+            allTabs,
+            tabs,
+            updateActiveTab,
+            updateTab,
+            isActiveTabReloading,
+            pageLoaded,
+            windowId,
+            safeExperimentsEnabled
+        } = this.props;
 
         const tabComponents = tabs.map( ( tab, i ) =>
         {
@@ -78,13 +94,14 @@ export default class TabContents extends Component
                     isActiveTab={ isActiveTab }
                     isActiveTabReloading={ isActiveTabReloading }
                     addTab={ addTab }
-                    closeTab={  closeTab }
+                    closeTab={ closeTab }
                     updateTab={ updateTab }
                     updateActiveTab={ updateActiveTab }
                     pageLoaded={ pageLoaded }
                     key={ tab.index }
                     index={ tab.index }
                     windowId={ windowId }
+                    safeExperimentsEnabled={ safeExperimentsEnabled }
                     ref={ ( c ) =>
                     {
                         if ( isActiveTab )

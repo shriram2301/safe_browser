@@ -10,6 +10,7 @@ jest.mock( 'extensions/safe/ffi/refs/types', () => ( {} ) );
 jest.mock( 'extensions/safe/ffi/refs/constructors', () => ( {} ) );
 jest.mock( 'extensions/safe/ffi/refs/parsers', () => ( {} ) );
 
+
 jest.mock( 'ref-array', () => jest.fn() );
 //
 jest.mock( 'ffi', () => jest.fn() );
@@ -18,16 +19,32 @@ jest.mock( 'extensions/safe/ffi/authenticator', () => jest.fn() );
 jest.mock( '@maidsafe/safe-node-app', () => jest.fn() );
 
 
+
 describe.only( 'SAFE manageWebIdUpdates', () =>
 {
     if ( APPVEYOR ) return;
 
     const win = {};
+
     const store = { subscribe: jest.fn() }; // need to mock store. should be called once.
+
     beforeEach( () =>
     {
         webviewPreload.onPreload( store, win );
     } );
+
+    test( 'webIdEventEmitter should not exist with experiments disabled', () =>
+    {
+        const store = {
+            subscribe : jest.fn(),
+            getState  : jest.fn( () => ( { safeBrowserApp: { experimentsEnabled: false } } ) )
+        };
+
+        webviewPreload.onPreload( store, win );
+
+        expect( win.webIdEventEmitter ).toBeNull();
+    } );
+
 
     test( 'webIdEventEmitter should exist', () =>
     {

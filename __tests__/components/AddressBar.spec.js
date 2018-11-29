@@ -1,35 +1,54 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
+import { Provider } from 'react-redux';
 
 import AddressBar from 'components/AddressBar';
+import configureStore from 'redux-mock-store';
+
+const mockStore = configureStore();
+
+jest.mock('extensions/safe/actions/safeBrowserApplication_actions')
 
 describe( 'AddressBar', () =>
 {
     let wrapper;
     let instance;
     let props;
+    let store;
 
     beforeEach( () =>
     {
         props = {
-          address        : 'about:blank',
-          isSelected     : false,
-          isBookmarked   : false,
-          addBookmark    : jest.fn(),
-          removeBookmark : jest.fn(),
-          onBlur         : jest.fn(),
-          onSelect       : jest.fn(),
-          onFocus        : jest.fn(),
-          reloadPage     : jest.fn(),
-          activeTab      : { isLoading: false }
+            windowId           : 1,
+            address            : 'about:blank',
+            isSelected         : false,
+            isBookmarked       : false,
+            addBookmark        : jest.fn(),
+            removeBookmark     : jest.fn(),
+            activeTabBackwards : jest.fn(),
+            activeTabForwards  : jest.fn(),
+            updateActiveTab    : jest.fn(),
+            onBlur             : jest.fn(),
+            onSelect           : jest.fn(),
+            onFocus            : jest.fn(),
+            reloadPage         : jest.fn(),
+            activeTab          : { isLoading: false }
         };
+
+
     } );
 
     describe( 'constructor( props )', () =>
     {
         beforeEach( () =>
         {
-            wrapper = mount( <AddressBar { ...props } /> );
+            store = mockStore( props );
+
+            wrapper = shallow(
+                <Provider store={ store } >
+                    <AddressBar { ...props } />
+                </Provider > ).dive();
+
             instance = wrapper.instance();
         } );
         it( 'should have name AddressBar', () =>

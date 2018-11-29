@@ -108,6 +108,19 @@ export default class Tab extends Component
         } );
     }
 
+    webviewFocussed (event)
+    {
+        logger.verbose('Webview focussed: Triggering click event on browser window');
+
+        var fakeClick = new MouseEvent('click', {
+           view: window,
+           bubbles: true,
+           cancelable: true
+         });
+
+         window.dispatchEvent( fakeClick )
+    }
+
     componentDidMount()
     {
         const { webview } = this;
@@ -133,6 +146,8 @@ export default class Tab extends Component
             webview.addEventListener( 'new-window', ::this.newWindow );
             webview.addEventListener( 'did-fail-load', ::this.didFailLoad );
             webview.addEventListener( 'update-target-url', ::this.updateTargetUrl );
+
+            webview.addEventListener( 'focus', ::this.webviewFocussed );
 
 
             this.domReady();
@@ -247,12 +262,14 @@ export default class Tab extends Component
 
     onCrash = (e) =>
     {
-        logger.err('The webview crashed', e)
+        console.error(e)
+        logger.error('The webview crashed', e)
     }
 
     onGpuCrash = (e) =>
     {
-        logger.err('The webview GPU crashed', e)
+        console.error(e)
+        logger.error('The webview GPU crashed', e)
     }
 
     didStartLoading( )
@@ -316,7 +333,7 @@ export default class Tab extends Component
 
     didStopLoading( )
     {
-        logger.verbose('DID STOP')
+        logger.verbose('Tab did stop loading')
         const { updateTab, index, isActiveTab } = this.props;
 
         const tabUpdate = {
@@ -334,7 +351,7 @@ export default class Tab extends Component
     {
         const { updateTab, index } = this.props;
 
-        logger.verbose( 'DID FINISH LAODING' );
+        logger.verbose('Tab did finish loading')
         const tabUpdate = {
             index,
             isLoading : false
@@ -490,6 +507,7 @@ export default class Tab extends Component
         } );
     }
 
+    // TODO Move this functinoality to extensions
     updateTheIdInWebview = ( newWebId ) =>
     {
         const { updateTab, index, webId } = this.props;
@@ -504,6 +522,20 @@ export default class Tab extends Component
         const setupEventEmitter = `
             webIdUpdater = () =>
             {
+                // check for experiments set...
+                if( ! safeExperimentsEnabled )
+                    return;
+
+                console.warn(
+                    \`%cSAFE Browser Experimental Feature
+%cThe webIdEventEmitter and window.currentWebId are experimental features.
+They may be deprecated or change in future.
+
+For updates or to submit ideas and suggestions, visit https://github.com/maidsafe/safe_browser\`,
+                'font-weight: bold',
+                'font-weight: normal'
+                );
+
                 var oldWebId_Id = '';
                 var currentIdDefined = typeof window.currentWebId !== 'undefined';
 
@@ -524,16 +556,19 @@ export default class Tab extends Component
             webIdUpdater();
         `;
 
-        // const updateTheIdInWebview = () =>
-        // {
         webview.executeJavaScript( setupEventEmitter )
-        // }
 
     }
 
     setCurrentWebId( newWebId ) {
 
-        this.debouncedWebIdUpdateFunc( newWebId );
+        // TODO: move webId func into extensions
+        const { safeExperimentsEnabled } = this.props;
+
+        if( safeExperimentsEnabled )
+        {
+            this.debouncedWebIdUpdateFunc( newWebId );
+        }
     }
 
     newWindow( e )
@@ -616,11 +651,11 @@ export default class Tab extends Component
         const url = addTrailingSlashIfNeeded( input );
         logger.silly( 'Webview: loading url:', url );
 
-        if ( !urlHasChanged( this.state.browserState.url, url) )
-        {
-            logger.verbose( 'not loading URL as it has not changed');
-            return;
-        }
+        // if ( !urlHasChanged( this.state.browserState.url, url) )
+        // {
+        //     logger.verbose( 'not loading URL as it has not changed');
+        //     return;
+        // }
 
         const browserState = { ...this.state.browserState, url };
         this.setState( { browserState } );
