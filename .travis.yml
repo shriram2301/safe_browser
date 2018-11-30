@@ -1,8 +1,8 @@
 sudo: required
 dist: trusty
 os:
-- osx
-- linux
+# - osx
+# - linux
 - windows
 
 env:
@@ -101,7 +101,7 @@ before_deploy:
 - echo "deploying ${RELEASE_ZIP} to GitHub releases as tagged with ${TRAVIS_TAG}"
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sha256sum release/*.zip >> release/$RELEASE.txt; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then shasum -a 256 release/*.zip >> release/$RELEASE.txt; fi
-- if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then certutil -hashfile  release/*.zip SHA256 shasum -a 256>> release/$RELEASE.txt; fi
+- if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then certutil -hashfile  release/*.zip SHA256 >> release/$RELEASE.txt; fi
 - export SHA_256_SUM="$(ls release/*.txt)";
 
 
