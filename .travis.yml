@@ -3,19 +3,21 @@ dist: trusty
 os:
 - osx
 - linux
+- windows
+
 env:
 - NODE_ENV=dev
 - NODE_ENV=prod
 language: node_js
 node_js:
-- 8
-cache:
-  yarn: true
-  directories:
-  - node_modules
-  - app/node_modules
-  - "$HOME/.electron"
-  - "$HOME/.cache"
+- 8 
+# cache:
+#   yarn: true
+#   directories:
+#   - node_modules
+#   - app/node_modules
+#   - "$HOME/.electron"
+#   - "$HOME/.cache"
 
 addons:
   # chrome: stable
@@ -30,12 +32,9 @@ addons:
     - xorriso
     - desktop-file-utils
 
-
-before_install:
-
 before_script:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080;
-  fi
+  fi 
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start &
 - sleep 5
@@ -54,15 +53,21 @@ script:
 # separate tests for safe + auth as together throws error due to native libs
 - export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
 - sleep 15
+
 - yarn run package-only
 # travis retry the full string to ensure repeat tests dont crash due to first try processess hanging around...
-- if [[ "$NODE_ENV" != "prod" ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse ||  yarn run test-exts-e2e-network";
+- if [[ "$NODE_ENV" != "prod" &&  "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f Peruse ||  yarn run test-exts-e2e-network";
   fi
-- travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-e2e-prod"
+- if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-e2e-prod";
+  fi
+- if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then travis_retry eval " pkill -f electron || pkill -f SAFE Browser ||  yarn run test-e2e-prod";
+  fi  
+# - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then travis_retry eval " powershell Stop-Process -Name "electron" -Force || powershell Stop-Process -Name "SAFE Browser" -Force";
+#   fi  
 - sleep 5
-- travis_retry eval " pkill -f electron || pkill -f SAFE Browser || yarn run test-exts-e2e-prod"
-
+- echo "----------------------SCRIPT DONE--------------------"
 after_success:
+- echo "----------------------After Success--------------------" 
 - ls release
 - export RELEASE="$(ls release)";
 - echo "deploying ${RELEASE} to GitHub releases as tagged with ${TRAVIS_TAG}"
@@ -71,11 +76,12 @@ after_success:
   fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then zip -r -q ${RELEASE}.zip ${RELEASE};
   fi
+- if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then 7z a ${RELEASE}.zip ${RELEASE};
+  fi  
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then zip -d *.zip *.DS_Store && zip -d *.zip  __MACOSX/\*;
   fi
 - cd ..
 - ls release
-
 after_failure:
 - ls /home/travis/safe-browser/app/node_modules/@maidsafe/safe-node-app/src/native
 # - cat ~/.local/share/applications/mimeapps.list
@@ -87,6 +93,8 @@ after_failure:
 # check resolution...
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then  system_profiler SPDisplaysDataType | grep Resolution
   fi
+- if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then where python;
+  fi
 
 
 before_deploy:
@@ -95,6 +103,7 @@ before_deploy:
 - echo "deploying ${RELEASE_ZIP} to GitHub releases as tagged with ${TRAVIS_TAG}"
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sha256sum release/*.zip >> release/$RELEASE.txt; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then shasum -a 256 release/*.zip >> release/$RELEASE.txt; fi
+- if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then certutil -hashfile  release/*.zip SHA256 shasum -a 256>> release/$RELEASE.txt; fi
 - export SHA_256_SUM="$(ls release/*.txt)";
 
 
