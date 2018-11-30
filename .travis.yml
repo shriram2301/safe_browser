@@ -113,9 +113,6 @@ deploy:
   file:
     - "${RELEASE_ZIP}"
     - "${SHA_256_SUM}"
-  draft: true
-  tag_name: $TRAVIS_TAG
   on:
-    tags: true
     repo: shriram2301/safe_browser
     branch: '397'
