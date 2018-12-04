@@ -11,14 +11,6 @@ env:
 language: node_js
 node_js:
 - 8 
-# cache:
-#   yarn: true
-#   directories:
-#   - node_modules
-#   - app/node_modules
-#   - "$HOME/.electron"
-#   - "$HOME/.cache"
-
 addons:
   # chrome: stable
   apt:
@@ -91,9 +83,6 @@ after_failure:
 # check resolution...
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then  system_profiler SPDisplaysDataType | grep Resolution
   fi
-- if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then where python;
-  fi
-
 
 before_deploy:
 
@@ -108,12 +97,11 @@ before_deploy:
 deploy:
   provider: releases
   skip_cleanup: true
-   api_key:
+  api_key:
     secure: koxiDMX+Hl5fNd5TliLzxKI0H0eIs0elJVs686cfFNiyqnOsBS6wimxC2YK62wk/eXaHZ7gvi1Bfy6GuRnP2fNeLTL3IZ9O9HOcUP2X/jQ12fn5wkewr6DjQx3xlN+/BGSq9IAROMq5ol0moKFBFsu4rX28ovIl2Ft6TIJio8SflM7zZFI4WJa8NNGRBkkr0Dz+MB7fuMWrI3w0paj7BeHoz5ETsmW122plpAgaMQvmpB5k+ZhpCQYE0BwEEdXPAjYLOd6MQl99b0A+bg5ZC4/aJHC6UnCMdtgnzIGSrsNOdLCR8tz6tGv4rlf2TnxH9hKTKqz1N2GmQ4MSBukQpikb6DLcQbbOhjVSPwdWWU8y/O840Y68styYdTddrXJXRnr8sBtykxje1SeB3NaTsaIlSeJu8BfTgZXjJwI46kb3kSQsKHVTDdKfn3MeXEOQpxlZ4EHYEX/ZGc3Wk/uBeGpBMqiN0svdXxZTRaxl43jiJquGsI/3Kp5Q5XPlDp/cVPpCZJjQgw8qeS3fn14axnk373IJF9biSEVdfmfml5UjGX0MwMCip0OgFWvoGlo9VqMnnLYG2ltOI85XdMnZV2DuDPSUw7ODanYhnJFTr4035+TjxpXruO7wg6cuH6YPEUJR+I7pPeSUEX40RNvYsSKW07ZTLBLCkYArTcgRSiQ8=
   file:
     - "${RELEASE_ZIP}"
     - "${SHA_256_SUM}"
-  draft: true
-  tag_name: $TRAVIS_TAG
   on:
-    tags: true
+    repo: shriram2301/safe_browser
+    branch: '397'
