@@ -1,22 +1,17 @@
 sudo: required
 dist: trusty
+bundler_args: --retry 5
 os:
 - osx
 - linux
+- windows
+
 env:
-- NODE_ENV=dev
+- NODE_ENV=dev 
 - NODE_ENV=prod
 language: node_js
 node_js:
-- 8
-# cache:
-#   yarn: true
-#   directories:
-#   - node_modules
-#   - app/node_modules
-#   - "$HOME/.electron"
-#   - "$HOME/.cache"
-
+- 8 
 addons:
   # chrome: stable
   apt:
@@ -30,6 +25,8 @@ addons:
     - xorriso
     - desktop-file-utils
 
+install:
+- travis_retry yarn
 
 before_script:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "/Library/Application Support/VMware Tools/vmware-resolutionSet" 1920 1080;
