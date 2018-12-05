@@ -5,8 +5,7 @@ import url from 'url';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './tabBar.css';
-import MdClose from 'react-icons/md/close';
-import MdAdd from 'react-icons/md/add';
+import * as icons from 'react-icons';
 import logger from 'logger';
 import { isInternalPage } from 'utils/urlHelpers';
 import { CLASSES, INTERNAL_PAGES } from 'appConstants';
@@ -136,7 +135,7 @@ export default class TabBar extends Component
                         { title || 'New Tab' }
                     </Column>
                     <Column align="right" className={ styles.favicon }>
-                        <MdClose
+                        <icons.MdClose
                             className={ `${styles.tabCloseButton} ${CLASSES.CLOSE_TAB}` }
                             onClick={ this.handleTabClose.bind( this, tabData ) }
                             title="Close"
@@ -156,7 +155,7 @@ export default class TabBar extends Component
                         this.getTabs()
                     }
                     <div className={ `${styles.addTab} ${CLASSES.ADD_TAB}` } onClick={ this.handleAddTabClick.bind( this ) }>
-                        <MdAdd
+                        <icons.MdAdd
                             className={ styles.tabAddButton }
                             title="New Tab"
                         />
