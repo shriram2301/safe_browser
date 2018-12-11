@@ -2,10 +2,10 @@ sudo: required
 dist: trusty
 os:
 - osx
-- linux
+# - linux
 env:
 - NODE_ENV=dev
-- NODE_ENV=prod
+# - NODE_ENV=prod
 language: node_js
 node_js:
 - 8
@@ -48,7 +48,7 @@ script:
   fi
 - yarn run build
 - yarn run rebuild
-- yarn run test-peruse
+# - yarn run test-peruse
 # - travis_retry yarn run test-exts # super occasionally times out in tests.
 
 # separate tests for safe + auth as together throws error due to native libs
