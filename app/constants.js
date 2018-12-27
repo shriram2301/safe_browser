@@ -234,7 +234,8 @@ export const CLASSES = {
     SETTINGS_MENU__HISTORY       : 'js-settingsMenu_history',
     SETTINGS_MENU__TOGGLE        : 'js-settingsMenu_toggle',
     SETTINGS_MENU__TOGGLE_BUTTON : 'js-settingsMenu_toggleButton',
-    SETTINGS_MENU__TOGGLE_TEXT   : 'js-settingsMenu_toggleText'
+    SETTINGS_MENU__TOGGLE_TEXT   : 'js-settingsMenu_toggleText',
+    MOCK_TAG                     : 'js-MockTag'
 };
 
 const getDomClasses = () =>

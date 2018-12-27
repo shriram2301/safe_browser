@@ -340,6 +340,52 @@ describe( 'main window', () =>
         expect( header ).toBe( 'History' );
     } );
 
+    it( 'checks for Mock Network Tag', async () =>
+    {
+        expect.assertions( 1 );
+        const { client } = app;
+        await delay( 4500 );
+        await newTab( app );
+        await delay( 2500 );
+        if ( nodeEnv === 'dev')
+        {
+            expect( await client.waitForExist( BROWSER_UI.MOCK_TAG, WAIT_FOR_EXIST_TIMEOUT ) ).toBeTruthy();
+        }
+        if ( nodeEnv === 'prod')
+        {
+            expect( await client.isExisting( BROWSER_UI.MOCK_TAG, WAIT_FOR_EXIST_TIMEOUT, true ) ).toBeFalsy();
+        }
+        if ( nodeEnv === 'test')
+        {
+            expect( await client.waitForExist( BROWSER_UI.MOCK_TAG, WAIT_FOR_EXIST_TIMEOUT ) ).toBeTruthy();
+        }
+    } );
+
+    it( 'checks if text inside  Mock Tag ', async () =>
+    {
+        expect.assertions( 1 );
+        const { client } = app;
+        await delay( 4500 );
+        await newTab( app );
+        await delay( 2500 );
+        let text;
+        await delay( 2500 );
+        if ( nodeEnv === 'dev')
+        {
+            text = await client.getText( BROWSER_UI.MOCK_TAG );
+            expect( text ).toMatch( 'Mock Network' );
+        }
+        if ( nodeEnv === 'prod')
+        {
+            expect( await client.isExisting( BROWSER_UI.MOCK_TAG, WAIT_FOR_EXIST_TIMEOUT, true ) ).toBeFalsy();
+        }
+        if ( nodeEnv === 'test')
+        {   
+            text = await client.getText( BROWSER_UI.MOCK_TAG );
+            expect( text ).toMatch( 'Mock Network' );
+        }
+    } );
+
     // TODO: Setup spectron spoofer for these menu interactions.
     xtest( 'closes the window', async () =>
     {
