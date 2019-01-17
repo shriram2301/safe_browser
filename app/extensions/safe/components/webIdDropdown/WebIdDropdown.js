@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 // import styles from './browser.css';
 import { CLASSES, isRunningSpectronTestProcess, startedRunningMock } from 'appConstants';
 import { SAFE } from 'extensions/safe/constants';
-import { Column, IconButton, Grid } from 'nessie-ui';
+import { Row,Column, IconButton, Grid, Spinner } from 'nessie-ui';
 import _ from 'lodash';
 import logger from 'logger';
 import styles from './webIdButtons.css';
@@ -28,7 +28,7 @@ export default class WebIdDropdown extends Component
 
         if ( !getAvailableWebIds ) return;
 
-        this.debouncedGetWebIds = _.debounce( getAvailableWebIds, 2000 );
+        this.debouncedGetWebIds = _.debounce( getAvailableWebIds, 500 );
     }
 
     handleIdClick = ( webId ) =>
@@ -78,7 +78,7 @@ export default class WebIdDropdown extends Component
     authorisePeruse = () =>
     {
         const { setAppStatus } = this.props;
-
+        console.log( setAppStatus );
         setAppStatus( SAFE.APP_STATUS.TO_AUTH );
     }
 
@@ -147,39 +147,64 @@ export default class WebIdDropdown extends Component
 
         let webIdDropdownContents = [];
 
-        if ( appStatus !== SAFE.APP_STATUS.AUTHORISED )
+        switch ( appStatus )
         {
-            webIdDropdownContents.push( <li
-                className={ styles.webIdInfo }
-                onClick={ this.authorisePeruse }
-                className={ styles.openAuth }
-                key="noAuth"
-            ><a href="#">Authorise to display your WebIds.</a></li> );
-        }
-        else if ( webIdsList.length > 0 )
-        {
-            webIdDropdownContents = webIdsList;
-        }
-        else
-        {
-            webIdDropdownContents.push( <li
-                className={ styles.webIdInfo }
-                key="noId"
-            >No WebIds Found.</li> );
-        }
+            case SAFE.APP_STATUS.AUTHORISING:
+                webIdDropdownContents = [];
 
+                webIdDropdownContents.push( <li
+                    className={ styles.webIdInfo }
+                    className={ styles.openAuth }
+                    key="fetching">
+                    <Row align="left">
+                        <Column align="left"> 
+                            <Spinner size="small" />
+                        </Column>
+                        <Column align="left">
+                            <label>loading...</label>
+                        </Column>
+                    </Row>
+                </li> );
+                break;
+            case SAFE.APP_STATUS.AUTHORISED:
+                if ( isFetchingWebIds )
+                {
+                    webIdDropdownContents = [];
 
-        // This will be quite fast on mock.
-        // TODO: Add transition.
-        if ( isFetchingWebIds )
-        {
-            webIdDropdownContents = webIdDropdownContents || [];
-
-            webIdDropdownContents.push( <li
-                className={ styles.webIdInfo }
-                className={ styles.openAuth }
-                key="fetching"
-            >Updating webIds.</li> );
+                    webIdDropdownContents.push( <li
+                        className={ styles.webIdInfo }
+                        className={ styles.openAuth }
+                        key="fetching">
+                        <Row align="left">
+                            <Column align="left"> 
+                                <Spinner size="small" />
+                            </Column>
+                            <Column align="left">
+                                <label>loading...</label>
+                            </Column>
+                        </Row>
+                    </li> );
+                    break;
+                }
+                else if ( webIdsList.length > 0 )
+                {
+                    webIdDropdownContents = webIdsList;
+                }
+                else
+                {
+                    webIdDropdownContents.push( <li
+                        className={ styles.webIdInfo }
+                        key="noId"
+                    >No WebIds Found.</li> );
+                }
+                break;
+            default:
+                webIdDropdownContents.push( <li
+                    className={ styles.webIdInfo }
+                    className={ styles.openAuth }
+                    key="noAuth"
+                ><label>Login in to see your WebIds</label></li> );
+                break;
         }
 
 
