@@ -16,14 +16,14 @@ jobs:
       versionSpec: '8.x'
     displayName: 'Install Node.js'
   - script:
-     echo hello from Linux
-     yarn install
-     yarn run build
-     yarn run rebuild
-     yarn run test-peruse
-     export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
-     sleep 15
-     yarn run package-only
+     - echo hello from Linux
+     - yarn install
+     - yarn run build
+     - yarn run rebuild
+     - yarn run test-peruse
+     - export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
+     - sleep 15
+     - yarn run package-only
   displayName: 'yarn install,build,rebuild,test-peruse,package-only'
 
 - job: macOS
