@@ -23,8 +23,7 @@ jobs:
   export {no_proxy,NO_PROXY}="127.0.0.1,localhost"
   sleep 15
   yarn run package-only
-  displayName: 'yarn install,build,rebuild,test-peruse,package-only'
-
+    displayName:'yarn install,build,rebuild,test-peruse,package-only'
 # - job: macOS
 #   pool:
 #     vmImage: 'macOS-10.13'
