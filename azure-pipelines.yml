@@ -26,9 +26,9 @@ jobs:
      yarn run package-only
   displayName: 'yarn install,build,rebuild,test-peruse,package-only'
 
-- job: Linux
+- job: macOS
   pool:
-    vmImage: 'ubuntu-16.04'
+    vmImage: 'macOS-10.13'
   steps:
   - script:
      echo hello from Linux
@@ -41,9 +41,9 @@ jobs:
      yarn run package-only
   displayName: 'yarn install,build,rebuild,test-peruse,package-only'
 
-- job: Linux
+- job: Windows
   pool:
-    vmImage: 'ubuntu-16.04'
+    vmImage: 'vs2017-win2016'
   steps:
   - script:
      echo hello from Linux
