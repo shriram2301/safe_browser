@@ -16,7 +16,7 @@ jobs:
       versionSpec: '8.x'
     displayName: 'Install Node.js'
   - script:
-      yarn install
+      yarn 
       yarn run build
       yarn run rebuild
       yarn run test-peruse
